@@ -1,7 +1,10 @@
 {
-	"userId": "705755112169275462",
-	"channelId": "",
-	"serverId": "1120540122937573448",
+	"userId": "",
+	"channelId": null,
+	"serverId": "",
 	"offset": 0,
-	"pages": 20
+	"pages": 20,
+	"settings": {
+		"interval_ms": 500
+	}
 }

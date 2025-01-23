@@ -48,7 +48,7 @@ async function requestMessages() {
 
     console.log(`Fetched page ${pagesFetched + 1} of ${maximumPages}`);
 
-    await timeout(500);
+    await timeout(query.settings.interval_ms || 500);
     pagesFetched++;
   }
 
@@ -61,5 +61,5 @@ function saveToFile(messages: string[]) {
 
 const messages = await requestMessages();
 
-console.log(messages);
+console.log(`Files being saved to data/${query.userId}.txt`);
 saveToFile(messages);
