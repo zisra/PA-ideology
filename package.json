@@ -1,0 +1,13 @@
+{
+	"name": "pa-ideology",
+	"version": "1.0.0",
+	"main": "src/index.ts",
+	"scripts": {
+		"start": "node --experimental-strip-types --env-file=.env ./src/index.ts"
+	},
+	"description": "",
+	"type": "module",
+	"devDependencies": {
+		"@types/node": "^22.10.8"
+	}
+}
