@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<script>
+			// Define canvas and context
+			const canvas = document.createElement('canvas');
+			canvas.width = 800;
+			canvas.height = 600;
+			document.body.appendChild(canvas);
+			const ctx = canvas.getContext('2d');
+
+			// Draw political compass
+			function drawCompass() {
+				// Define quadrant colors
+				ctx.fillStyle = '#F8BBBA'; // Top left
+				ctx.fillRect(0, 0, 300, 300);
+				ctx.fillStyle = '#93D9F8'; // Top right
+				ctx.fillRect(300, 0, 300, 300);
+				ctx.fillStyle = '#C8E4BB'; // Bottom left
+				ctx.fillRect(0, 300, 300, 300);
+				ctx.fillStyle = '#F5F5A7'; // Bottom right
+				ctx.fillRect(300, 300, 300, 300);
+
+				// Draw grid
+				ctx.strokeStyle = '#848282';
+				ctx.lineWidth = 0.3;
+				for (let i = 0; i <= 600; i += 30) {
+					// 20x20 grid
+					// Vertical lines
+					ctx.beginPath();
+					ctx.moveTo(i, 0);
+					ctx.lineTo(i, 600);
+					ctx.stroke();
+
+					// Horizontal lines
+					ctx.beginPath();
+					ctx.moveTo(0, i);
+					ctx.lineTo(600, i);
+					ctx.stroke();
+				}
+
+				// Draw axes
+				ctx.strokeStyle = '#000';
+				ctx.lineWidth = 2;
+				ctx.beginPath();
+				ctx.moveTo(300, 0);
+				ctx.lineTo(300, 600);
+				ctx.stroke();
+
+				ctx.beginPath();
+				ctx.moveTo(0, 300);
+				ctx.lineTo(600, 300);
+				ctx.stroke();
+			}
+
+			// Draw social scale on the right
+			function drawSocialScale(data) {
+				// Create gradient
+				const gradient = ctx.createLinearGradient(620, 600, 620, 0);
+
+				gradient.addColorStop(1, 'green');
+				gradient.addColorStop(0, 'blue');
+
+				ctx.fillStyle = gradient;
+				ctx.fillRect(620, 0, 40, 600);
+
+				// Add ticks and labels
+				ctx.fillStyle = '#000';
+				ctx.font = '12px Arial';
+				data.forEach((item) => {
+					const y = 600 - (item.politicalCompass.socialScale + 10) * 30; // Scale socialScale from -10 to 10
+					ctx.beginPath();
+					ctx.moveTo(620, y);
+					ctx.lineTo(660, y);
+					ctx.strokeStyle = '#000';
+					ctx.stroke();
+					ctx.fillText(item.user.name, 665, y + 4);
+				});
+			}
+
+			// Draw avatars at the coordinates
+			function drawAvatars(data) {
+				data.forEach((item) => {
+					const x = 300 + item.politicalCompass.x * 50; // Scale x
+					const y = 300 + item.politicalCompass.y * -50; // Scale y
+
+					const img = new Image();
+					img.src = item.user.profileUrl;
+					img.onload = () => {
+						ctx.drawImage(img, x - 10, y - 10, 20, 20); // Draw smaller avatar
+					};
+				});
+			}
+
+			// Main drawing function
+			drawCompass();
+
+			const PORT = 3000;
+			// Fetch data
+			fetch(`http://localhost:${PORT}/data`)
+				.then((res) => res.json())
+				.then((data) => {
+					drawSocialScale(data);
+					drawAvatars(data);
+				})
+				.catch((err) => console.error(err));
+		</script>
+	</body>
+</html>
